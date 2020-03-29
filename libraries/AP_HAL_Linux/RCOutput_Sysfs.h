@@ -2,6 +2,7 @@
 
 #include "AP_HAL_Linux.h"
 #include "PWM_Sysfs.h"
+#include "hal.h"
 
 namespace Linux {
 
@@ -26,6 +27,9 @@ public:
     void cork(void) override;
     void push(void) override;
 
+    void set_output_mode(uint16_t mask, const enum output_mode mode) override;
+    bool get_output_mode_banner(char banner_msg[], uint8_t banner_msg_len) const override;
+
 private:
     const uint8_t _chip;
     const uint8_t _channel_base;
@@ -36,6 +40,9 @@ private:
     bool _corked;
     uint16_t *_pending;
     uint32_t _pending_mask;
+
+    // for handling pwm mode
+    enum output_mode *_pwm_mode;
 };
 
 }

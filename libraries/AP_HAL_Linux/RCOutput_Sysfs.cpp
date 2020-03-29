@@ -27,6 +27,7 @@ RCOutput_Sysfs::RCOutput_Sysfs(uint8_t chip, uint8_t channel_base, uint8_t chann
     , _channel_count(channel_count)
     , _pwm_channels(new PWM_Sysfs_Base *[_channel_count])
     , _pending(new uint16_t[_channel_count])
+    , _pwm_mode(new enum output_mode[_channel_count])
 {
 }
 
@@ -59,6 +60,9 @@ void RCOutput_Sysfs::init()
         _pwm_channels[i]->set_freq(50);
         _pwm_channels[i]->set_duty_cycle(0);
         _pwm_channels[i]->set_polarity(PWM_Sysfs::Polarity::NORMAL);
+
+        // set initial pwm mode
+        _pwm_mode[i] = MODE_PWM_NORMAL;
     }
 }
 
@@ -149,5 +153,26 @@ void RCOutput_Sysfs::push(void)
     _corked = false;
 }
     
+void RCOutput_Sysfs::set_output_mode(uint16_t mask, const enum output_mode mode)
+{
+    if (mode == MODE_PWM_NORMAL || mode == MODE_PWM_BRUSHED) {
+        for (uint8_t i = 0; i < _channel_count; i++) {
+            if (mask & (0x1 << i)) {
+                _pwm_mode[i] = mode;
+            }
+        }
+    }
+}
+
+bool RCOutput_Sysfs::get_output_mode_banner(char banner_msg[], uint8_t banner_msg_len) const
+{
+    // write banner to banner_msg
+    hal.util->snprintf(banner_msg, banner_msg_len, "RCOut:");
+    for (uint8_t k = i; k < _channel_count; k++) {
+        append_to_banner(banner_msg, banner_msg_len, _pwm_mode[i], i, i);
+    }
+
+    return true;
 }
     
+}
