@@ -20,6 +20,7 @@
 #include <AP_Math/AP_Math.h>
 
 #include <stdio.h>
+#include <syslog.h>
 
 extern const AP_HAL::HAL& hal;
 
@@ -61,7 +62,10 @@ void RCOutput_Sysfs::init()
         _pwm_channels[i]->enable(false);
 
         /* Set the initial frequency */
-        hal.console->printf("RCOutput_Sysfs: set_freq %i to %i\n", i, 50);
+        syslog(
+            LOG_MAKEPRI(LOG_USER, LOG_WARNING),
+            "RCOutput_Sysfs: set_freq %i to %i\n", i, 50
+        );
         _pwm_channels[i]->set_freq(50);
         _pwm_channels[i]->set_duty_cycle(0);
         _pwm_channels[i]->set_polarity(PWM_Sysfs::Polarity::NORMAL);
@@ -75,7 +79,10 @@ void RCOutput_Sysfs::set_freq(uint32_t chmask, uint16_t freq_hz)
 {
     for (uint8_t i = 0; i < _channel_count; i++) {
         if (chmask & (0x1 << i)) {
-            hal.console->printf("RCOutput_Sysfs: set_freq %i to %i\n", i, freq_hz);
+            syslog(
+                LOG_MAKEPRI(LOG_USER, LOG_WARNING),
+                "RCOutput_Sysfs: set_freq %i to %i\n", i, freq_hz
+            );
             _pwm_channels[i]->set_freq(freq_hz);
         }
     }
