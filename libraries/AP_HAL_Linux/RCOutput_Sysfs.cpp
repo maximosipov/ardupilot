@@ -170,7 +170,7 @@ bool RCOutput_Sysfs::get_output_mode_banner(char banner_msg[], uint8_t banner_ms
 {
     // write banner to banner_msg
     snprintf(banner_msg, banner_msg_len, "RCOut:");
-    for (uint8_t k = i; k < _channel_count; k++) {
+    for (uint8_t i = 0; i < _channel_count; i++) {
         append_to_banner(banner_msg, banner_msg_len, _pwm_mode[i], i, i);
     }
 
