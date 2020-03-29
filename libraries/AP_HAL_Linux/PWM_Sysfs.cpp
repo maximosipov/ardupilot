@@ -26,6 +26,8 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_Math/AP_Math.h>
 
+#include <syslog.h>
+
 extern const AP_HAL::HAL& hal;
 
 namespace Linux {
@@ -116,6 +118,10 @@ uint32_t PWM_Sysfs_Base::get_period()
 
 void PWM_Sysfs_Base::set_freq(uint32_t freq)
 {
+    syslog(
+        LOG_MAKEPRI(LOG_USER, LOG_WARNING),
+        "PWM_Sysfs: set_freq %i\n", freq
+    );
     set_period(hz_to_nsec(freq));
 }
 
