@@ -19,6 +19,8 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_Math/AP_Math.h>
 
+#include <stdio.h>
+
 namespace Linux {
 
 RCOutput_Sysfs::RCOutput_Sysfs(uint8_t chip, uint8_t channel_base, uint8_t channel_count)
@@ -167,7 +169,7 @@ void RCOutput_Sysfs::set_output_mode(uint16_t mask, const enum output_mode mode)
 bool RCOutput_Sysfs::get_output_mode_banner(char banner_msg[], uint8_t banner_msg_len) const
 {
     // write banner to banner_msg
-    hal.util->snprintf(banner_msg, banner_msg_len, "RCOut:");
+    snprintf(banner_msg, banner_msg_len, "RCOut:");
     for (uint8_t k = i; k < _channel_count; k++) {
         append_to_banner(banner_msg, banner_msg_len, _pwm_mode[i], i, i);
     }

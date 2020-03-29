@@ -2,7 +2,6 @@
 
 #include "AP_HAL_Linux.h"
 #include "PWM_Sysfs.h"
-#include "hal.h"
 
 namespace Linux {
 
