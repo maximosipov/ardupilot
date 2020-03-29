@@ -21,6 +21,8 @@
 
 #include <stdio.h>
 
+extern const AP_HAL::HAL& hal;
+
 namespace Linux {
 
 RCOutput_Sysfs::RCOutput_Sysfs(uint8_t chip, uint8_t channel_base, uint8_t channel_count)
@@ -59,6 +61,7 @@ void RCOutput_Sysfs::init()
         _pwm_channels[i]->enable(false);
 
         /* Set the initial frequency */
+        hal.console->printf("RCOutput_Sysfs: set_freq %i to %i\n", i, 50);
         _pwm_channels[i]->set_freq(50);
         _pwm_channels[i]->set_duty_cycle(0);
         _pwm_channels[i]->set_polarity(PWM_Sysfs::Polarity::NORMAL);
@@ -71,7 +74,8 @@ void RCOutput_Sysfs::init()
 void RCOutput_Sysfs::set_freq(uint32_t chmask, uint16_t freq_hz)
 {
     for (uint8_t i = 0; i < _channel_count; i++) {
-        if (chmask & 1 << i) {
+        if (chmask & (0x1 << i)) {
+            hal.console->printf("RCOutput_Sysfs: set_freq %i to %i\n", i, freq_hz);
             _pwm_channels[i]->set_freq(freq_hz);
         }
     }
